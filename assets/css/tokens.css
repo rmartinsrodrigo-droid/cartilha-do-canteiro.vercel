@@ -1,0 +1,31 @@
+/* Variáveis CSS geradas a partir do tokens.json do design system Athié Wohnrath (versão 1790882938-da32). */
+:root, [data-theme="light"] {
+  --preto: #000000; --branco: #ffffff; --tiffany: #00dedb; --dark-tiffany: #00585c; --prata: #bfbfbf;
+  --tiffany-15: #d9fafa; --tiffany-40: #99f2f1; --dark-tiffany-15: #d9e6e7;
+  --surface: #ffffff; --surface-sunken: #f5f6f6; --surface-raised: #ffffff;
+  --line: #e2e6e6; --line-strong: #8a9496; --ink: #0a0b0b; --ink-muted: #596264; --logo-ink: #000000;
+  --action: #000000; --action-hover: #2a2f30; --on-action: #ffffff;
+  --accent: #00585c; --accent-hover: #00454a; --accent-soft: #d9fafa;
+  --signature: #00dedb; --on-signature: #000000;
+  --success: #0e7a4f; --success-soft: #e3f4ec; --warning: #9a5b00; --warning-soft: #fbf0dc; --danger: #b3261e; --danger-soft: #fbe9e7;
+  --link: #00585c;
+  --shadow-sm: 0 1px 2px #0a0b0b14; --shadow-lg: 0 8px 24px #0a0b0b1f, 0 2px 6px #0a0b0b14; --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px #00585c;
+}
+[data-theme="dark"] {
+  --surface: #0a0b0b; --surface-sunken: #000000; --surface-raised: #151818;
+  --line: #252a2b; --line-strong: #6f7a7c; --ink: #f3f5f5; --ink-muted: #a7b0b2; --logo-ink: #ffffff;
+  --action: #00dedb; --action-hover: #5ee9e7; --on-action: #000000;
+  --accent: #00dedb; --accent-hover: #5ee9e7; --accent-soft: #0b3133;
+  --success: #4fd394; --success-soft: #0f2c1f; --warning: #f2b53a; --warning-soft: #2e2208; --danger: #ff8a80; --danger-soft: #34120f;
+  --link: #00dedb;
+  --shadow-sm: none; --shadow-lg: 0 12px 32px #000000cc; --focus-ring: 0 0 0 2px #0a0b0b, 0 0 0 4px #00dedb;
+}
+:root {
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
+  --space-12: 48px; --space-16: 64px; --space-18: 72px; --space-24: 96px; --space-32: 128px;
+  --radius-sm: 4px; --radius-lg: 8px; --radius-full: 9999px;
+  --container: 1296px; --gutter: 24px; --header-height: 88px;
+  --font-sans: Montserrat, Gotham, system-ui, sans-serif;
+  --font-brand: Gotham, Montserrat, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}

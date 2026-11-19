@@ -1,0 +1,232 @@
+/* a|w — biblioteca de interação v2: botões, controles de vídeo, navegação e movimento.
+   Usa as variáveis de ds/aw/tokens.css. Prefixo awx-. Proposta para entrar no design system depois da escolha. */
+
+:root {
+  --awx-ease: cubic-bezier(.2, .7, .2, 1);      /* saída suave: hover, entradas */
+  --awx-ease-io: cubic-bezier(.65, 0, .35, 1);  /* entrada e saída: preenchimentos, aberturas */
+  --awx-d1: 120ms;   /* toque, pressionado */
+  --awx-d2: 200ms;   /* cor, borda */
+  --awx-d3: 420ms;   /* preenchimento, seta, sublinhado */
+  --awx-d4: 900ms;   /* entrada de bloco */
+  --awx-d5: 1400ms;  /* abertura do divisor */
+}
+
+/* ---------- 1. Botão base: preenchimento que corre da esquerda (a régua) ---------- */
+.awx-btn {
+  --awx-bg: var(--action); --awx-fg: var(--on-action);
+  --awx-wipe: var(--signature); --awx-wipe-fg: var(--on-signature);
+  --awx-bd: transparent;
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: 14px;
+  height: 52px; padding: 0 22px 0 24px; box-sizing: border-box;
+  border-radius: var(--radius-sm); border: 1.5px solid var(--awx-bd);
+  font: 600 15px/1 var(--font-sans); letter-spacing: .005em; white-space: nowrap;
+  text-decoration: none; cursor: pointer;
+  color: var(--awx-fg); background: var(--awx-bg);
+  transition: color var(--awx-d2) var(--awx-ease), border-color var(--awx-d2) var(--awx-ease), transform var(--awx-d1) var(--awx-ease);
+}
+.awx-btn { background-clip: padding-box; }
+.awx-btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--awx-wipe);
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform var(--awx-d2) var(--awx-ease); /* saída mais rápida que a entrada */
+}
+.awx-btn:hover::before, .awx-btn.is-hover::before { transform: scaleX(1); transition: transform var(--awx-d3) var(--awx-ease-io); }
+.awx-btn--solid { border-width: 0; }
+.awx-btn:hover, .awx-btn.is-hover { color: var(--awx-wipe-fg); }
+.awx-btn:active, .awx-btn.is-pressed { transform: scale(.98); }
+.awx-btn:focus-visible, .awx-btn.is-focus { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+.awx-ico { display: block; width: 16px; height: 16px; flex: none; transition: transform var(--awx-d3) var(--awx-ease); }
+.awx-btn:hover .awx-ico, .awx-btn.is-hover .awx-ico { transform: translateX(4px); }
+.awx-sep { display: block; width: 1.5px; height: 18px; flex: none; background: currentColor; opacity: .45; }
+
+/* sólido (primário) em cada fundo */
+[data-theme="dark"] .awx-btn--solid { --awx-wipe: #ffffff; --awx-wipe-fg: #000000; }
+.aw-assinatura .awx-btn--solid { --awx-bg: #000000; --awx-fg: #ffffff; --awx-wipe: #ffffff; --awx-wipe-fg: #000000; }
+
+/* linha (secundário): preenche de baixo para cima */
+.awx-btn--line { --awx-bg: transparent; --awx-fg: var(--ink); --awx-wipe: var(--ink); --awx-wipe-fg: var(--surface); --awx-bd: var(--ink); }
+.awx-btn--line::before { transform: scaleY(0); transform-origin: center bottom; }
+.awx-btn--line:hover::before, .awx-btn--line.is-hover::before { transform: scaleY(1); }
+
+/* vidro (sobre vídeo e foto) */
+.awx-btn--glass {
+  --awx-bg: rgba(10, 11, 11, .38); --awx-fg: #ffffff; --awx-wipe: #ffffff; --awx-wipe-fg: #000000; --awx-bd: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.awx-btn--glass:focus-visible, .awx-btn--glass.is-focus { box-shadow: 0 0 0 2px #0a0b0b, 0 0 0 4px #00dedb; }
+
+.awx-btn--sm { height: 44px; padding: 0 18px; font-size: 14px; gap: 10px; }
+.awx-btn--lg { height: 60px; padding: 0 28px 0 30px; font-size: 16px; gap: 16px; }
+
+/* ---------- 2. Círculo com seta + rótulo ---------- */
+.awx-circ {
+  display: inline-flex; align-items: center; gap: 16px; min-height: 48px; padding: 0;
+  background: none; border: 0; text-decoration: none; cursor: pointer;
+  font: 600 15px/1.2 var(--font-sans); color: var(--ink);
+}
+.awx-circ__ring {
+  position: relative; width: 48px; height: 48px; flex: none; border-radius: 50%;
+  border: 1.5px solid currentColor; box-sizing: border-box; display: grid; place-items: center; overflow: hidden;
+  transition: border-color var(--awx-d2) var(--awx-ease), color var(--awx-d2) var(--awx-ease);
+}
+.awx-circ__ring::before {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--signature);
+  transform: scale(0); transition: transform var(--awx-d3) var(--awx-ease);
+}
+.awx-circ__ring svg { position: relative; width: 16px; height: 16px; transition: transform var(--awx-d3) var(--awx-ease); }
+.awx-circ:hover .awx-circ__ring, .awx-circ.is-hover .awx-circ__ring { border-color: var(--signature); color: #000000; }
+.awx-circ:hover .awx-circ__ring::before, .awx-circ.is-hover .awx-circ__ring::before { transform: scale(1); }
+.awx-circ:hover .awx-circ__ring svg, .awx-circ.is-hover .awx-circ__ring svg { transform: translateX(3px); }
+.awx-circ__label { position: relative; padding-bottom: 4px; }
+.awx-circ__label::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left center; transition: transform var(--awx-d2) var(--awx-ease); }
+.awx-circ:hover .awx-circ__label::after, .awx-circ.is-hover .awx-circ__label::after { transform: scaleX(1); transition-duration: var(--awx-d3); }
+.awx-circ:focus-visible { outline: none; }
+.awx-circ:focus-visible .awx-circ__ring, .awx-circ.is-focus .awx-circ__ring { box-shadow: var(--focus-ring); }
+.awx-circ--back .awx-circ__ring svg { transform: scaleX(-1); }
+.awx-circ--back:hover .awx-circ__ring svg { transform: scaleX(-1) translateX(3px); }
+.aw-assinatura .awx-circ__ring::before { background: #000000; }
+.aw-assinatura .awx-circ:hover .awx-circ__ring, .aw-assinatura .awx-circ.is-hover .awx-circ__ring { border-color: #000000; color: #ffffff; }
+[data-theme="dark"] .awx-circ:hover .awx-circ__ring, [data-theme="dark"] .awx-circ.is-hover .awx-circ__ring { color: #000000; }
+.awx-circ--sm .awx-circ__ring { width: 44px; height: 44px; }
+
+/* ---------- 3. Link com mácron: o traço do ē cresce até a largura do texto ---------- */
+.awx-link {
+  position: relative; display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 8px; padding: 4px 0; min-height: 44px; box-sizing: border-box;
+  text-decoration: none; color: var(--ink); font: 600 15px/1.3 var(--font-sans); cursor: pointer;
+}
+.awx-link::before { content: ""; display: block; width: 24px; height: 2px; background: var(--accent); }
+.awx-link::after {
+  content: ""; position: absolute; left: 0; top: 4px; width: 100%; height: 2px; background: var(--accent);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--awx-d3) var(--awx-ease);
+}
+.awx-link:hover::after, .awx-link.is-hover::after, .awx-link.is-on::after { transform: scaleX(1); }
+.awx-link:focus-visible, .awx-link.is-focus { outline: 2px solid transparent; box-shadow: var(--focus-ring); border-radius: 2px; }
+.aw-assinatura .awx-link::before, .aw-assinatura .awx-link::after { background: #000000; }
+
+/* link de texto com seta (terciário) */
+.awx-more { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: var(--ink); font: 600 15px/1.2 var(--font-sans); cursor: pointer; }
+.awx-more span { position: relative; padding-bottom: 3px; }
+.awx-more span::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px; background: currentColor; transform: scaleX(1); transform-origin: right center; transition: transform var(--awx-d2) var(--awx-ease); }
+.awx-more:hover span::after, .awx-more.is-hover span::after { transform: scaleX(0); transition-duration: var(--awx-d3); }
+.awx-more .awx-ico { transition: transform var(--awx-d3) var(--awx-ease); }
+.awx-more:hover .awx-ico, .awx-more.is-hover .awx-ico { transform: translateX(4px); }
+.awx-more:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); border-radius: 2px; }
+
+/* ---------- 4. Navegação: mácron no item ativo e no hover ---------- */
+.awx-navlink {
+  position: relative; display: inline-flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px 0; min-height: 44px; box-sizing: border-box;
+  text-decoration: none; color: inherit; font: 600 15px/1 var(--font-sans); cursor: pointer;
+}
+.awx-navlink::before {
+  content: ""; display: block; width: 16px; height: 2px; background: var(--accent);
+  transform: scaleX(0); transform-origin: left center; transition: transform var(--awx-d3) var(--awx-ease);
+}
+.awx-navlink:hover::before, .awx-navlink.is-on::before, .awx-navlink.is-hover::before { transform: scaleX(1); }
+.awx-navlink:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); border-radius: 2px; }
+.awx-util { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; color: inherit; font: 500 13px/1 var(--font-sans); letter-spacing: .02em; opacity: .82; cursor: pointer; transition: opacity var(--awx-d2) var(--awx-ease); }
+.awx-util:hover { opacity: 1; }
+.awx-iconbtn { width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; transition: background-color var(--awx-d2) var(--awx-ease); }
+.awx-iconbtn:hover { background: rgba(127, 127, 127, .14); }
+.awx-iconbtn:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+
+/* ---------- 5. Controle de vídeo com anel de progresso ---------- */
+.awx-vc {
+  position: relative; width: 48px; height: 48px; flex: none; padding: 0; border: 0; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer; color: #ffffff;
+  background: rgba(10, 11, 11, .38); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: background-color var(--awx-d2) var(--awx-ease);
+}
+.awx-vc:hover { background: rgba(10, 11, 11, .62); }
+.awx-vc:focus-visible { outline: 2px solid transparent; box-shadow: 0 0 0 2px #0a0b0b, 0 0 0 4px #00dedb; }
+.awx-vc > svg.awx-vc__ring { position: absolute; inset: 0; width: 48px; height: 48px; transform: rotate(-90deg); }
+.awx-vc__ring .track { fill: none; stroke: rgba(255, 255, 255, .35); stroke-width: 1.5; }
+.awx-vc__ring .prog { fill: none; stroke: #00dedb; stroke-width: 2; stroke-dasharray: 144.5; stroke-dashoffset: 144.5; animation: awx-ring 8s linear infinite; }
+.awx-vc.is-paused .awx-vc__ring .prog { animation-play-state: paused; }
+.awx-vc > svg.awx-vc__icon { position: relative; width: 16px; height: 16px; }
+@keyframes awx-ring { to { stroke-dashoffset: 0; } }
+
+/* indicador de histórias: barras de mácron que se enchem */
+.awx-ind { display: flex; gap: 12px; align-items: center; }
+.awx-ind--v { flex-direction: column; align-items: flex-end; gap: 4px; }
+.awx-ind__item { position: relative; width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
+.awx-ind__item::before { content: ""; position: absolute; left: 0; right: 0; top: 21px; height: 2px; background: rgba(255, 255, 255, .38); }
+.awx-ind__item::after { content: ""; position: absolute; left: 0; right: 0; top: 21px; height: 2px; background: #00dedb; transform: scaleX(0); transform-origin: left center; }
+.awx-ind__item.is-done::after { transform: scaleX(1); background: #ffffff; }
+.awx-ind__item.is-on::after { animation: awx-fill 8s linear infinite; }
+.awx-ind.is-paused .awx-ind__item.is-on::after { animation-play-state: paused; }
+.awx-ind__item:focus-visible { outline: 2px solid transparent; box-shadow: 0 0 0 2px #0a0b0b, 0 0 0 4px #00dedb; border-radius: 2px; }
+.awx-ind--light .awx-ind__item::before { background: var(--line-strong); }
+.awx-ind--light .awx-ind__item::after { background: var(--accent); }
+.awx-ind--light .awx-ind__item.is-done::after { background: var(--ink); }
+@keyframes awx-fill { to { transform: scaleX(1); } }
+
+/* ---------- 6. Filtros ---------- */
+.awx-chip {
+  height: 44px; padding: 0 18px; box-sizing: border-box; border-radius: var(--radius-full);
+  border: 1px solid var(--line-strong); background: transparent; color: var(--ink);
+  display: inline-flex; align-items: center; gap: 8px; font: 600 14px/1 var(--font-sans); white-space: nowrap; cursor: pointer;
+  transition: background-color var(--awx-d2) var(--awx-ease), color var(--awx-d2) var(--awx-ease), border-color var(--awx-d2) var(--awx-ease);
+}
+.awx-chip:hover, .awx-chip.is-hover { border-color: var(--ink); }
+.awx-chip.is-on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.awx-chip:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+.awx-chip__n { font-weight: 500; opacity: .7; }
+
+/* ---------- 7. Cards e mídia ---------- */
+.awx-card { display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: inherit; cursor: pointer; }
+.awx-card__media { position: relative; overflow: hidden; border-radius: 2px; }
+.awx-card__media > .awx-media { transition: transform 900ms var(--awx-ease); }
+.awx-card:hover .awx-card__media > .awx-media, .awx-card.is-hover .awx-card__media > .awx-media { transform: scale(1.04); }
+.awx-card__title { transition: color var(--awx-d2) var(--awx-ease); }
+.awx-card:hover .awx-card__title, .awx-card.is-hover .awx-card__title { color: var(--accent); }
+.awx-card:focus-visible { outline: 2px solid transparent; box-shadow: var(--focus-ring); }
+a.aw-case { transition: transform var(--awx-d3) var(--awx-ease), box-shadow var(--awx-d3) var(--awx-ease); }
+a.aw-case:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+/* espaço reservado para vídeo e foto */
+.awx-media {
+  position: relative; width: 100%; height: 100%; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px;
+  font: 400 13px/1.5 var(--font-sans); color: #a7b0b2;
+  background-color: #141818;
+  background-image: repeating-linear-gradient(0deg, #ffffff0d 0 1px, #00000000 1px 48px), repeating-linear-gradient(90deg, #ffffff0d 0 1px, #00000000 1px 48px);
+}
+.awx-media--light { color: #00585c; background-color: #d9e6e7; background-image: repeating-linear-gradient(0deg, #00585c14 0 1px, #00000000 1px 32px), repeating-linear-gradient(90deg, #00585c14 0 1px, #00000000 1px 32px); }
+.awx-kb { animation: awx-kb 18s ease-in-out infinite alternate; }
+@keyframes awx-kb { from { transform: scale(1); } to { transform: scale(1.06); } }
+.awx-scrim { position: absolute; left: 0; right: 0; bottom: 0; pointer-events: none; background: linear-gradient(0deg, #000000d9 0%, #00000080 55%, #00000000 100%); }
+.awx-scrim-top { position: absolute; left: 0; right: 0; top: 0; height: 180px; pointer-events: none; background: linear-gradient(180deg, #00000099 0%, #00000000 100%); }
+.awx-caption { display: inline-flex; align-items: center; gap: 10px; padding: 8px 12px; background: #000000; color: #ffffff; font: 500 12px/1.2 var(--font-sans); }
+.awx-caption b { font-weight: 600; }
+.awx-caption i { display: block; width: 1px; height: 12px; background: #8a9496; }
+
+/* ---------- 8. Entradas e abertura ---------- */
+.awx-rise { animation: awx-rise var(--awx-d4) var(--awx-ease) both; }
+@keyframes awx-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.awx-words .w { opacity: .22; transition: opacity var(--awx-d3) var(--awx-ease); }
+.awx-words .w.on { opacity: 1; }
+.awx-draw { transform-origin: top center; animation: awx-draw 700ms var(--awx-ease) both; }
+@keyframes awx-draw { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+/* abertura: o divisor do logo cresce, as metades se abrem e revelam o vídeo */
+.awx-intro { position: absolute; inset: 0; z-index: 20; pointer-events: none; overflow: hidden; }
+.awx-intro__l, .awx-intro__r { position: absolute; top: 0; bottom: 0; width: 50%; background: #000000; animation: awx-open-l 1100ms var(--awx-ease-io) 1300ms both; }
+.awx-intro__l { left: 0; }
+.awx-intro__r { right: 0; animation-name: awx-open-r; }
+.awx-intro__bar { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: #00dedb; transform: scaleY(0); transform-origin: center; animation: awx-bar 800ms var(--awx-ease) 300ms both, awx-out 300ms ease 1400ms both; }
+.awx-intro__logo { position: absolute; top: 50%; left: 50%; animation: awx-in 500ms ease 0ms both, awx-out 300ms ease 1100ms both; }
+@keyframes awx-open-l { to { transform: translateX(-100%); } }
+@keyframes awx-open-r { to { transform: translateX(100%); } }
+@keyframes awx-bar { to { transform: scaleY(1); } }
+@keyframes awx-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes awx-out { to { opacity: 0; } }
+.awx-after-intro { animation: awx-rise var(--awx-d4) var(--awx-ease) 2100ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .awx-btn, .awx-btn::before, .awx-ico, .awx-circ__ring, .awx-circ__ring::before, .awx-circ__ring svg, .awx-circ__label::after,
+  .awx-link::after, .awx-more span::after, .awx-navlink::before, .awx-chip, .awx-card__media > .awx-media, a.aw-case, .awx-words .w { transition: none !important; }
+  .awx-rise, .awx-draw, .awx-kb, .awx-after-intro, .awx-ind__item.is-on::after, .awx-vc__ring .prog { animation: none !important; }
+  .awx-vc__ring .prog { stroke-dashoffset: 0; }
+  .awx-intro { display: none; }
+}

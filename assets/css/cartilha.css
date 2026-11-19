@@ -1,0 +1,117 @@
+/* Cartilha do Canteiro · camada própria da página, só com tokens do design system a|w */
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.c-skip {
+  position: absolute; left: var(--space-4); top: calc(var(--space-4) * -4); z-index: 60;
+  background: var(--surface); color: var(--ink); padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); transition: top 150ms ease-out;
+}
+.c-skip:focus { top: var(--space-4); }
+
+/* ---------------------------------------------------------------- cabeçalho */
+.c-hd { position: sticky; top: 0; z-index: 50; background: var(--surface); border-bottom: 1px solid var(--line); }
+.c-hd__in { display: flex; align-items: center; gap: var(--space-4); min-height: 64px; }
+.c-hd__t {
+  margin: 0; font-size: 13px; line-height: 1.2; letter-spacing: .08em; color: var(--ink-muted);
+  flex: 1 1 auto;
+}
+.c-hd__ac { display: flex; align-items: center; gap: var(--space-2); }
+.c-hd__btn { width: 44px; height: 44px; }
+.s-hd__logo img { display: block; height: 20px; width: auto; }
+
+.c-painel { max-height: calc(100dvh - 64px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.c-painel__in { padding-top: var(--space-4); padding-bottom: var(--space-6); }
+.c-busca { margin-bottom: var(--space-4); }
+
+/* ---------------------------------------------------------------- índice */
+.c-idx { list-style: none; margin: 0; padding: 0; }
+.c-idx > li + li { border-top: 1px solid var(--line); }
+.c-idx__a {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  min-height: 48px; padding: var(--space-3) 0; color: var(--ink); text-decoration: none;
+  font-size: 16px; line-height: 1.4;
+}
+.c-idx__a .awx-ico { flex: 0 0 auto; color: var(--accent); opacity: .55; transition: opacity 150ms ease-out, transform 150ms ease-out; }
+.c-idx__a:hover, .c-idx__a:focus-visible { color: var(--accent); }
+.c-idx__a:hover .awx-ico { opacity: 1; transform: translateX(3px); }
+.c-idx--pagina { margin-top: var(--space-6); max-width: 760px; }
+
+/* ---------------------------------------------------------------- abertura (hero) */
+.c-hero { padding: var(--space-16) 0 var(--space-18); }
+.c-hero__h { margin: var(--space-3) 0 var(--space-4); }
+.c-hero__sub { margin: 0; max-width: 34ch; }
+.c-hero__ac { margin-top: var(--space-8); flex-wrap: wrap; gap: var(--space-3); }
+
+.c-abre__h { margin: var(--space-3) 0 var(--space-6); }
+.c-abre__txt > p { margin: 0 0 var(--space-4); }
+.c-abre__ass { margin: var(--space-8) 0 0; font-weight: 600; font-size: 18px; }
+
+.c-idxsec .s-label { color: var(--accent); }
+
+/* ---------------------------------------------------------------- capítulos */
+.c-cap { padding: var(--space-12) 0; border-top: 1px solid var(--line); scroll-margin-top: 72px; }
+.c-cap:nth-of-type(even) { background: var(--surface-sunken); }
+.c-cap__olho { color: var(--accent); margin: 0 0 var(--space-2); }
+.c-cap__h { margin: 0 0 var(--space-3); }
+.c-cap__apoio { margin: 0 0 var(--space-6); }
+
+.c-foto { overflow: hidden; margin: 0 0 var(--space-8); background: var(--tiffany); max-width: 760px; }
+.c-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.c-blocos { display: grid; gap: var(--space-8); max-width: 760px; }
+.c-blk__rot { margin: 0 0 var(--space-3); }
+.c-blk--nao .c-blk__rot { color: var(--ink); }
+.c-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.c-lista > li { display: flex; gap: var(--space-3); align-items: flex-start; font-size: 16px; line-height: 1.45; }
+.c-mk { width: 18px; height: 18px; flex: 0 0 auto; margin-top: 2px; }
+
+.c-nota {
+  margin: var(--space-8) 0 0; max-width: 760px; padding: var(--space-4) var(--space-6);
+  background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  font-size: 15px; line-height: 1.5; color: var(--ink);
+}
+.c-cap:nth-of-type(even) .c-nota { background: var(--surface); }
+
+/* ---------------------------------------------------------------- fecho e rodapé */
+.c-fecho__in { text-align: center; }
+.c-fecho__f { margin: 0 auto; font-size: clamp(22px, 5vw, 32px); line-height: 1.25; font-weight: 500; max-width: 24ch; }
+.c-fecho__ac { margin-top: var(--space-8); justify-content: center; flex-wrap: wrap; gap: var(--space-3); }
+
+.c-ft__in { display: grid; gap: var(--space-4); }
+.c-ft__logo { height: 24px; width: auto; }
+.c-ft__frase { margin: 0; font-size: 18px; }
+.c-ft__links { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.c-ft__links a { color: inherit; }
+.c-ft__legal { margin: 0; font-size: 13px; color: var(--ink-muted); }
+
+.c-top {
+  position: fixed; right: var(--space-4); bottom: var(--space-4); z-index: 40;
+  width: 44px; height: 44px; background: var(--surface); box-shadow: var(--shadow-lg);
+}
+
+/* ---------------------------------------------------------------- busca */
+[data-oculto="1"] { display: none !important; }
+.c-vazio { margin: var(--space-8) 0; font-size: 16px; color: var(--ink-muted); }
+
+/* ---------------------------------------------------------------- telas maiores */
+@media (min-width: 900px) {
+  .c-hd__in { min-height: 72px; }
+  .c-cap { padding: var(--space-16) 0; scroll-margin-top: 80px; }
+  .c-hero { padding: var(--space-24) 0; }
+  .c-blocos { grid-template-columns: 1fr 1fr; gap: var(--space-8) var(--space-12); align-items: start; }
+  .c-blocos > .c-blk:only-child { grid-column: 1 / -1; max-width: 560px; }
+  .c-nota { padding: var(--space-6) var(--space-8); }
+}
+
+/* ---------------------------------------------------------------- impressão */
+@media print {
+  .c-hd, .c-painel, .c-top, .c-hero__ac, .c-fecho__ac, .c-idxsec { display: none !important; }
+  .c-cap { break-inside: avoid; border-top: 1px solid #ccc; padding: 12pt 0; background: #fff !important; }
+  .c-foto { max-width: 70mm; }
+  a[href]:after { content: ""; }
+}
+
+/* o atributo hidden tem que vencer as classes de componente */
+.c-top[hidden], .c-painel[hidden], .c-vazio[hidden] { display: none !important; }
